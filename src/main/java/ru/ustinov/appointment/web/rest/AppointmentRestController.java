@@ -10,6 +10,7 @@ import ru.ustinov.appointment.repository.AppointmentRepository;
 import ru.ustinov.appointment.service.AppointmentService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class AppointmentRestController {
 
     @GetMapping("/freeSlots")
     public List<Appointment> getFreeAppointments(@RequestParam Long doctorId, @RequestParam LocalDate date) {
-        return appointmentRepository.getFreeAppointments(doctorId, date);
+        return appointmentRepository.getFreeAppointments(doctorId, date.atStartOfDay());
     }
 
     @PostMapping("/{appointmentId}")

@@ -1,7 +1,10 @@
 package ru.ustinov.appointment.xml;
 
 import appointment.schedule_web_service.AppointmentType;
+import appointment.schedule_web_service.CreateScheduleResponse;
 import ru.ustinov.appointment.model.Appointment;
+
+import java.util.List;
 
 /**
  * //TODO add comments.
@@ -16,8 +19,18 @@ public class AppointmentConverter {
         AppointmentType appointmentType = new AppointmentType();
         appointmentType.setStartTime(appointment.getStartTime());
         appointmentType.setEndTime(appointment.getEndTime());
-        appointmentType.setDoctorId(appointment.getDoctor().getId());
+        appointmentType.setDoctorName(appointment.getDoctor().getFullName());
         appointmentType.setId(appointment.getId());
         return appointmentType;
+    }
+
+    public static CreateScheduleResponse createAppointmentResponse(List<Appointment> schedule) {
+        final CreateScheduleResponse createScheduleResponse = new CreateScheduleResponse();
+        final List<AppointmentType> appointmentTypes = createScheduleResponse.getAppointments();
+        for (Appointment appointment : schedule) {
+            final AppointmentType appointmentType = fromAppointmentToXmlType(appointment);
+            appointmentTypes.add(appointmentType);
+        }
+        return createScheduleResponse;
     }
 }

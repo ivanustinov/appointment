@@ -34,13 +34,7 @@ public class ScheduleService {
     @ResponsePayload
     public CreateScheduleResponse createSchedule(@RequestPayload CreateScheduleRequest request) {
         final List<Appointment> schedule = appointmentService.createSchedule(request);
-        final CreateScheduleResponse createScheduleResponse = new CreateScheduleResponse();
-        final List<AppointmentType> appointmentTypes = createScheduleResponse.getAppointments();
-        for (Appointment appointment : schedule) {
-            final AppointmentType appointmentType = AppointmentConverter.fromAppointmentToXmlType(appointment);
-            appointmentTypes.add(appointmentType);
-        }
-        return createScheduleResponse;
+        return AppointmentConverter.createAppointmentResponse(schedule);
     }
 
 }

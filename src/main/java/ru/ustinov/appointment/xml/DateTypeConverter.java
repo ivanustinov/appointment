@@ -13,10 +13,10 @@ import java.time.format.DateTimeFormatter;
 public class DateTypeConverter {
 
     public static LocalDateTime parseDateTime(String inputDate)  {
-        return inputDate != null ? DateTimeFormatter.ofPattern("yyyy-MM-ddTHH.mm.ss.SSS").parse(inputDate, LocalDateTime::from) : null;
+        return inputDate != null ? DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").parse(inputDate, LocalDateTime::from) : null;
     }
 
     public static String printDateTime(LocalDateTime inputDate) {
-        return inputDate != null ? DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(inputDate) : null;
+        return inputDate != null ? DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").format(inputDate) : null;
     }
 }

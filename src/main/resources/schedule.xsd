@@ -22,10 +22,10 @@
 
     <xs:complexType name="appointmentType">
         <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
             <xs:element name="startTime" type="xs:dateTime"/>
             <xs:element name="endTime" type="xs:dateTime"/>
-            <xs:element name="doctorId" type="xs:long"/>
-            <xs:element name="id" type="xs:long"/>
+            <xs:element name="doctorName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

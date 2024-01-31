@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS appointments
     id serial primary key,
     doctor_id  integer not null
     constraint foreign_key_doctor references doctors,
-    start_time timestamp(6) not null
+    start_time timestamp not null
     constraint appointments_start_time_check
-    check (EXTRACT(hour FROM start_time) >= (9)::numeric),
-    end_time   timestamp(6) not null
+    check (cast(start_time as time) >= '9:00'),
+    end_time   timestamp not null
     constraint appointments_end_time_check
-    check (EXTRACT(hour FROM end_time) <= (18)::numeric),
+    check (cast(end_time as time) <= '18:00'),
     patient_id integer
     constraint foreign_key_patient references patients
 );

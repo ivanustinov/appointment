@@ -18,7 +18,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.MESSAGE;
 
@@ -46,9 +46,10 @@ public class AppointmentService {
         final Appointment appointment = appointmentRepository.getReferenceById(appointmentId);
         final LocalDateTime startTime = appointment.getStartTime();
         final LocalDateTime endTime = appointment.getEndTime();
-        final Optional<Appointment> onDuration = appointmentRepository.getAppointmentOnDurationByPatient(startTime, endTime, patientId);
+        final List<Appointment> onDuration = appointmentRepository.getAppointmentOnDurationByPatient(startTime, endTime, patientId);
         if (onDuration.isEmpty()) {
-            final Patient patient = patientRepository.getReferenceById(patientId);
+            final Patient patient = patientRepository.findById(patientId)
+                    .orElseThrow(() -> new NoSuchElementException("Patient not found with id: " + patientId));
             appointment.setPatient(patient);
             return appointmentRepository.save(appointment);
         } else {
@@ -63,19 +64,19 @@ public class AppointmentService {
         LocalDateTime timeStart = request.getStartTime();
         final int numberOfSlots = request.getNumberOfSlots();
         final long doctorId = request.getDoctorId();
-        final Doctor doctor = doctorRepository.getReferenceById(doctorId);
+        final Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new NoSuchElementException("Doctor not found with id: " + doctorId));
+        LocalDateTime endTime;
         for (int i = 0; i < numberOfSlots; i++) {
-            final LocalDateTime endTime = timeStart.plusMinutes(duration.toMinutes());
-            final Optional<Appointment> appointmentOnDurationByDoctor = appointmentRepository
-                    .getAppointmentOnDurationByDoctor(timeStart, endTime, doctorId);
+            endTime = timeStart.plusMinutes(duration.toMinutes());
+            final List<Appointment> appointmentOnDurationByDoctor = appointmentRepository
+                    .checkExistedAppointment(timeStart, endTime, doctorId);
             if (appointmentOnDurationByDoctor.isEmpty()) {
-                final Appointment appointment = new Appointment(timeStart, endTime, doctor);
-                final Appointment saved = appointmentRepository.save(appointment);
+                final Appointment saved = appointmentRepository.save(new Appointment(timeStart, endTime, doctor));
                 savedAppointments.add(saved);
             }
             timeStart = endTime;
         }
         return savedAppointments;
     }
-
 }
