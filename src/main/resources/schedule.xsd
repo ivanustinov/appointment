@@ -1,0 +1,32 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"  xmlns:tns="http://appointment/schedule-web-service"
+           targetNamespace="http://appointment/schedule-web-service" elementFormDefault="qualified">
+
+    <xs:element name="createScheduleRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="startTime" type="xs:dateTime"/>
+                <xs:element name="doctorId" type="xs:long"/>
+                <xs:element name="duration" type="xs:int"/>
+                <xs:element name="numberOfSlots" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createScheduleResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="appointments" type="tns:appointmentType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="appointmentType">
+        <xs:sequence>
+            <xs:element name="startTime" type="xs:dateTime"/>
+            <xs:element name="endTime" type="xs:dateTime"/>
+            <xs:element name="doctorId" type="xs:long"/>
+            <xs:element name="id" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
