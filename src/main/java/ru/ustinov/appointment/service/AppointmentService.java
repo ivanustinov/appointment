@@ -1,6 +1,7 @@
 package ru.ustinov.appointment.service;
 
 import appointment.schedule_web_service.CreateScheduleRequest;
+import appointment.schedule_web_service.CreateScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import ru.ustinov.appointment.model.Patient;
 import ru.ustinov.appointment.repository.AppointmentRepository;
 import ru.ustinov.appointment.repository.DoctorRepository;
 import ru.ustinov.appointment.repository.PatientRepository;
+import ru.ustinov.appointment.xml.AppointmentConverter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,8 +25,7 @@ import java.util.NoSuchElementException;
 import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.MESSAGE;
 
 /**
- * //TODO add comments.
- *
+ * Сервис работы с талонами(слотами времени)
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 30.01.2024
@@ -41,42 +42,76 @@ public class AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
+    /**
+     * Запись на прием
+     * @param appointmentId id талона
+     * @param patientId id пациента
+     * @return талон на прием
+     */
     @Transactional
     public Appointment takeAppointment(Long appointmentId, Long patientId) {
         final Appointment appointment = appointmentRepository.getReferenceById(appointmentId);
         final LocalDateTime startTime = appointment.getStartTime();
         final LocalDateTime endTime = appointment.getEndTime();
-        final List<Appointment> onDuration = appointmentRepository.getAppointmentOnDurationByPatient(startTime, endTime, patientId);
-        if (onDuration.isEmpty()) {
+        // проверяем, что талон свободен
+        final Appointment ifTaken = appointmentRepository.checkIfAlreadyTaken(appointmentId, patientId);
+        // проверяем, что пациент уже не записан на это время по другому талону
+        final Appointment ifExist = appointmentRepository.checkIfExist(startTime, endTime, patientId, appointmentId);
+        if (ifTaken == null && ifExist == null) {
             final Patient patient = patientRepository.findById(patientId)
                     .orElseThrow(() -> new NoSuchElementException("Patient not found with id: " + patientId));
             appointment.setPatient(patient);
-            return appointmentRepository.save(appointment);
+            final Appointment save = appointmentRepository.save(appointment);
+            return appointmentRepository.getWithDoctorAndPatient(save.getId().longValue());
         } else {
             throw new AppException(HttpStatus.CONFLICT, ErrorAttributeOptions.of(MESSAGE), "This entry is already taken!");
         }
     }
 
-    @Transactional
-    public List<Appointment> createSchedule(CreateScheduleRequest request) {
-        final List<Appointment> savedAppointments = new ArrayList<>();
+    /**
+     * Создание ответа с расписанием
+     * @param request запрос на создание расписания
+     * @return созданное расписание
+     */
+    public CreateScheduleResponse createScheduleResponse(CreateScheduleRequest request) {
         final Duration duration = Duration.ofMinutes(request.getDuration());
         LocalDateTime timeStart = request.getStartTime();
         final int numberOfSlots = request.getNumberOfSlots();
         final long doctorId = request.getDoctorId();
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("Doctor not found with id: " + doctorId));
+        // создаем расписание
+        final List<Appointment> schedule = createSchedule(numberOfSlots, duration, timeStart, doctor);
+        // конвертируем в xml
+        return AppointmentConverter.createAppointmentResponse(schedule, doctor, timeStart.toLocalDate());
+    }
+
+    /**
+     * Создание расписания врача на дату
+     * @param numberOfSlots количество талонов
+     * @param duration продолжительность приема в минутах
+     * @param timeStart дата и время начала первого приема
+     * @param doctor врач, для которого создается расписание
+     * @return Список созданных талонов(appointments) врача на указанную дату
+     */
+    @Transactional
+    public List<Appointment> createSchedule(int numberOfSlots, Duration duration, LocalDateTime timeStart, Doctor doctor) {
         LocalDateTime endTime;
+        Appointment saved;
+        final List<Appointment> savedAppointments = new ArrayList<>();
         for (int i = 0; i < numberOfSlots; i++) {
             endTime = timeStart.plusMinutes(duration.toMinutes());
+            // проверка на наличие талона на это время во избежание пересеченя по времени
             final List<Appointment> appointmentOnDurationByDoctor = appointmentRepository
-                    .checkExistedAppointment(timeStart, endTime, doctorId);
+                    .checkExistedAppointment(timeStart, endTime, doctor.getId());
+            // если талоны на это время для этого врача не созданы, создаем талон
             if (appointmentOnDurationByDoctor.isEmpty()) {
-                final Appointment saved = appointmentRepository.save(new Appointment(timeStart, endTime, doctor));
+                saved = appointmentRepository.save(new Appointment(timeStart, endTime, doctor));
                 savedAppointments.add(saved);
             }
             timeStart = endTime;
         }
         return savedAppointments;
     }
+
 }

@@ -9,5 +9,11 @@
         <jaxb:javaType name="java.time.LocalDateTime" xmlType="xs:dateTime"
                        parseMethod="ru.ustinov.appointment.xml.DateTypeConverter.parseDateTime"
                        printMethod="ru.ustinov.appointment.xml.DateTypeConverter.printDateTime" />
+        <jaxb:javaType name="java.time.LocalDate" xmlType="xs:date"
+                       parseMethod="ru.ustinov.appointment.xml.DateTypeConverter.parseDate"
+                       printMethod="ru.ustinov.appointment.xml.DateTypeConverter.printDate" />
+        <jaxb:javaType name="java.time.LocalTime" xmlType="xs:time"
+                       parseMethod="ru.ustinov.appointment.xml.DateTypeConverter.parseTime"
+                       printMethod="ru.ustinov.appointment.xml.DateTypeConverter.printTime" />
     </jaxb:globalBindings>
 </jaxb:bindings>

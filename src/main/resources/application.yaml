@@ -10,7 +10,7 @@ spring:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
         format_sql: true
-        show_sql: true
+#        show_sql: true
         default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
@@ -19,6 +19,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/appointment
     username: user
     password: password
+
+  jackson:
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
+    default-property-inclusion: non_null
 
   sql:
     init:
@@ -32,12 +40,12 @@ server.servlet:
     charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
     enabled: true # Enable http encoding support
     force: true
+  context_path: /appointment
 
 logging:
   level:
     root: WARN
     ru.ustinov.appointment: INFO
-    #    org.springframework.security: DEBUG
-#    org.springframework.orm.jpa: DEBUG
+    org.springframework.orm.jpa: INFO
     org.springframework.web: DEBUG
     org.springframework.ws: DEBUG

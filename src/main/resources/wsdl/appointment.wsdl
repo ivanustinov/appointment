@@ -1,0 +1,79 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://appointment/schedule-web-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://appointment/schedule-web-service" targetNamespace="http://appointment/schedule-web-service">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://appointment/schedule-web-service">
+            <xs:element name="createScheduleRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <!--  Дата и время начала первого приема  -->
+                        <xs:element name="startTime" type="xs:dateTime"/>
+                        <!--  Идентификатор врача  -->
+                        <xs:element name="doctorId" type="xs:long"/>
+                        <!--  Продолжительность приема в минутах  -->
+                        <xs:element name="duration" type="xs:int"/>
+                        <!--  Количество талонов  -->
+                        <xs:element name="numberOfSlots" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createScheduleResponse">
+                <xs:complexType>
+                    <!--  Созданное расписание  -->
+                    <xs:sequence>
+                        <xs:element name="schedule" type="tns:scheduleType"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="appointments" type="tns:appointmentType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="appointmentType">
+                <xs:sequence>
+                    <xs:element name="id" type="xs:long"/>
+                    <xs:element name="startTime" type="xs:time"/>
+                    <xs:element name="endTime" type="xs:time"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="scheduleType">
+                <xs:sequence>
+                    <xs:element name="doctor" type="tns:doctorType"/>
+                    <!--  Дата расписания  -->
+                    <xs:element name="scheduleDate" type="xs:date"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="doctorType">
+                <xs:sequence>
+                    <xs:element name="id" type="xs:long"/>
+                    <!--  ФИО врача  -->
+                    <xs:element name="doctorName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="createScheduleResponse">
+        <wsdl:part element="tns:createScheduleResponse" name="createScheduleResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createScheduleRequest">
+        <wsdl:part element="tns:createScheduleRequest" name="createScheduleRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="AppointmentPort">
+        <wsdl:operation name="createSchedule">
+            <wsdl:input message="tns:createScheduleRequest" name="createScheduleRequest"> </wsdl:input>
+            <wsdl:output message="tns:createScheduleResponse" name="createScheduleResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AppointmentPortSoap11" type="tns:AppointmentPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="createSchedule">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="createScheduleRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="createScheduleResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AppointmentPortService">
+        <wsdl:port binding="tns:AppointmentPortSoap11" name="AppointmentPortSoap11">
+            <soap:address location="http://localhost:8080/appointment/ws"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -5,8 +5,6 @@ import ru.ustinov.appointment.model.Doctor;
 import ru.ustinov.appointment.model.Patient;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 30.01.2024

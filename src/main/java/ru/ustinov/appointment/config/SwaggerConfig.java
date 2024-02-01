@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "REST API documentation",
                 version = "1.0",
-                description = "Appointment scheduler",
+                description = "Система записи пациентов на прием",
                 contact = @Contact(url = "https://github.com/ivanustinov", name = "Ivan Ustinov", email = "ivanustinov1985@yandex.ru")
         )
 )

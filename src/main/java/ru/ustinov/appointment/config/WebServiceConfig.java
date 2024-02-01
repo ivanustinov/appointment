@@ -9,6 +9,7 @@ package ru.ustinov.appointment.config;
  */
 
 import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -47,5 +48,12 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public XsdSchema scheduleSchema() {
         return new SimpleXsdSchema(new ClassPathResource("schedule.xsd"));
     }
+
+    @Bean
+    Module module() {
+        return new Hibernate6Module()
+                .configure(Hibernate6Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS, false);
+    }
+
 }
 

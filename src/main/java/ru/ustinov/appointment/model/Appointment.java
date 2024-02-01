@@ -1,14 +1,13 @@
 package ru.ustinov.appointment.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Check;
+import ru.ustinov.appointment.json.LocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 29.01.2024
@@ -27,20 +26,20 @@ public class Appointment extends BaseEntity {
         this.doctor = doctor;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @Column(name = "start_time", nullable = false)
-    @Check(constraints = "EXTRACT(HOUR FROM start_time) >= 9")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    @Check(constraints = "EXTRACT(HOUR FROM end_time) <= 18")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime endTime;
 
 }

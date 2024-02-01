@@ -10,8 +10,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 29.01.2024

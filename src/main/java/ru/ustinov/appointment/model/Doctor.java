@@ -10,8 +10,6 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 29.01.2024

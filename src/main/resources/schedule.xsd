@@ -4,9 +4,13 @@
     <xs:element name="createScheduleRequest">
         <xs:complexType>
             <xs:sequence>
+                <!-- Дата и время начала первого приема -->
                 <xs:element name="startTime" type="xs:dateTime"/>
+                <!-- Идентификатор врача -->
                 <xs:element name="doctorId" type="xs:long"/>
+                <!-- Продолжительность приема в минутах -->
                 <xs:element name="duration" type="xs:int"/>
+                <!-- Количество талонов -->
                 <xs:element name="numberOfSlots" type="xs:int"/>
             </xs:sequence>
         </xs:complexType>
@@ -14,7 +18,9 @@
 
     <xs:element name="createScheduleResponse">
         <xs:complexType>
+            <!-- Созданное расписание -->
             <xs:sequence>
+                <xs:element name="schedule" type="tns:scheduleType"/>
                 <xs:element name="appointments" type="tns:appointmentType" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
@@ -23,8 +29,23 @@
     <xs:complexType name="appointmentType">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
-            <xs:element name="startTime" type="xs:dateTime"/>
-            <xs:element name="endTime" type="xs:dateTime"/>
+            <xs:element name="startTime" type="xs:time"/>
+            <xs:element name="endTime" type="xs:time"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="scheduleType">
+        <xs:sequence>
+            <xs:element name="doctor" type="tns:doctorType"/>
+            <!-- Дата расписания -->
+            <xs:element name="scheduleDate" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="doctorType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <!-- ФИО врача -->
             <xs:element name="doctorName" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>

@@ -1,18 +1,18 @@
 package ru.ustinov.appointment.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import ru.ustinov.appointment.json.LocalDateTimeSerializer;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 /**
- * //TODO add comments.
- *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 29.01.2024
