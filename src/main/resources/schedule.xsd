@@ -1,5 +1,7 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"  xmlns:tns="http://appointment/schedule-web-service"
-           targetNamespace="http://appointment/schedule-web-service" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://appointment/schedule-web-service"
+           targetNamespace="http://appointment/schedule-web-service"
+           elementFormDefault="qualified">
 
     <xs:element name="createScheduleRequest">
         <xs:complexType>

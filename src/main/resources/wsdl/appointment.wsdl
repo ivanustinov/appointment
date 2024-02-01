@@ -1,6 +1,10 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://appointment/schedule-web-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://appointment/schedule-web-service" targetNamespace="http://appointment/schedule-web-service">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://appointment/schedule-web-service"
+                  targetNamespace="http://appointment/schedule-web-service">
     <wsdl:types>
-        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://appointment/schedule-web-service">
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://appointment/schedule-web-service">
             <xs:element name="createScheduleRequest">
                 <xs:complexType>
                     <xs:sequence>
