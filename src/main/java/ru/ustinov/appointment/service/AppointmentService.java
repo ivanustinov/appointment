@@ -42,9 +42,6 @@ public class AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    @Autowired
-    private AppointmentService appointmentService;
-
     /**
      * Запись на прием
      * @param appointmentId id талона
@@ -84,7 +81,7 @@ public class AppointmentService {
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("Doctor not found with id: " + doctorId));
         // создаем расписание
-        final List<Appointment> schedule = appointmentService.createSchedule(numberOfSlots, duration, timeStart, doctor);
+        final List<Appointment> schedule = createSchedule(numberOfSlots, duration, timeStart, doctor);
         // конвертируем в xml
         return AppointmentConverter.createAppointmentResponse(schedule, doctor, timeStart.toLocalDate());
     }
