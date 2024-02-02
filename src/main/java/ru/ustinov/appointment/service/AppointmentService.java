@@ -75,10 +75,9 @@ public class AppointmentService {
      * @param doctor        врач, для которого создается расписание
      * @return Список созданных талонов(appointments) врача на указанную дату
      */
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public List<Appointment> createSchedule(int numberOfSlots, Duration duration, LocalDateTime timeStart, Doctor doctor) {
-        LocalDateTime endTime;
-        Appointment saved;
+        LocalDateTime endTime; Appointment saved;
         final List<Appointment> savedAppointments = new ArrayList<>();
         for (int i = 0; i < numberOfSlots; i++) {
             endTime = timeStart.plusMinutes(duration.toMinutes());
