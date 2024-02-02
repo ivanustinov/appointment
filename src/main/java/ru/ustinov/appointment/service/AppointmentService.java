@@ -30,7 +30,6 @@ import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.M
  * @since 30.01.2024
  */
 @Service
-@NoArgsConstructor
 public class AppointmentService {
 
     @Autowired
@@ -38,9 +37,6 @@ public class AppointmentService {
 
     @Autowired
     private PatientRepository patientRepository;
-
-    @Autowired
-    private DoctorRepository doctorRepository;
 
     /**
      * Запись на прием
