@@ -1,7 +1,6 @@
 package ru.ustinov.appointment.service;
 
-import appointment.schedule_web_service.CreateScheduleRequest;
-import appointment.schedule_web_service.CreateScheduleResponse;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import ru.ustinov.appointment.model.Patient;
 import ru.ustinov.appointment.repository.AppointmentRepository;
 import ru.ustinov.appointment.repository.DoctorRepository;
 import ru.ustinov.appointment.repository.PatientRepository;
-import ru.ustinov.appointment.xml.AppointmentConverter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -26,11 +24,13 @@ import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.M
 
 /**
  * Сервис работы с талонами(слотами времени)
+ *
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
  * @version 1.0
  * @since 30.01.2024
  */
 @Service
+@NoArgsConstructor
 public class AppointmentService {
 
     @Autowired
@@ -44,8 +44,9 @@ public class AppointmentService {
 
     /**
      * Запись на прием
+     *
      * @param appointmentId id талона
-     * @param patientId id пациента
+     * @param patientId     id пациента
      * @return талон на прием
      */
     @Transactional
@@ -69,29 +70,12 @@ public class AppointmentService {
     }
 
     /**
-     * Создание ответа с расписанием
-     * @param request запрос на создание расписания
-     * @return созданное расписание
-     */
-    public CreateScheduleResponse createScheduleResponse(CreateScheduleRequest request) {
-        final Duration duration = Duration.ofMinutes(request.getDuration());
-        LocalDateTime timeStart = request.getStartTime();
-        final int numberOfSlots = request.getNumberOfSlots();
-        final long doctorId = request.getDoctorId();
-        final Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new NoSuchElementException("Doctor not found with id: " + doctorId));
-        // создаем расписание
-        final List<Appointment> schedule = createSchedule(numberOfSlots, duration, timeStart, doctor);
-        // конвертируем в xml
-        return AppointmentConverter.createAppointmentResponse(schedule, doctor, timeStart.toLocalDate());
-    }
-
-    /**
      * Создание расписания врача на дату
+     *
      * @param numberOfSlots количество талонов
-     * @param duration продолжительность приема в минутах
-     * @param timeStart дата и время начала первого приема
-     * @param doctor врач, для которого создается расписание
+     * @param duration      продолжительность приема в минутах
+     * @param timeStart     дата и время начала первого приема
+     * @param doctor        врач, для которого создается расписание
      * @return Список созданных талонов(appointments) врача на указанную дату
      */
     @Transactional
